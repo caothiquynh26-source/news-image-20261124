@@ -4,9 +4,11 @@ make.fun bounty: https://make.fun/bounty/news-image-20261124
 Reward: $100, 50 places paid ($20 / $12 / $6 / $2 x7 / $1.20 x40)
 Deadline: 2026-11-26T00:00:00Z (07:00, 26 Nov, GMT+7)
 
-Entry: `main.py` (Python 3.13, stdlib only, no network) copies the
+Entry: `main.py` (Python 3.13, stdlib only, no network) writes the
 pre-rendered `entry.png` (1024x1024, <1 MiB) to `/output/entry.png`.
-Running it twice writes identical bytes.
+The image data is stored as base64 text in `entry.png.b64` (and the
+binary `entry.png` itself is used when present); either way the
+written bytes are identical. Running it twice writes identical bytes.
 
 Headlines (24 Nov 2026, cross-checked in Just Security Early Edition,
 The Global Eye, and Horizon world-news summary):
