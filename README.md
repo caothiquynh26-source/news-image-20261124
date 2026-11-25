@@ -1,21 +1,33 @@
 # Sum up 24 November's world news in one image
 
 make.fun bounty: https://make.fun/bounty/news-image-20261124
-Reward: $100, 50 places paid ($20 / $12 / $6 / $2 x7 / $1.20 x40)
-Deadline: 2026-11-26T00:00:00Z (07:00, 26 Nov, GMT+7)
+Reward: $100 USDC, 50 places paid. Deadline: 2026-11-26T00:00:00Z.
 
-Entry: `main.py` (Python 3.13, stdlib only, no network) writes the
-pre-rendered `entry.png` (1024x1024, <1 MiB) to `/output/entry.png`.
-The image data is stored as base64 text in `entry.png.b64` (and the
-binary `entry.png` itself is used when present); either way the
-written bytes are identical. Running it twice writes identical bytes.
+## The image
 
-Headlines (24 Nov 2026, cross-checked in Just Security Early Edition,
-The Global Eye, and Horizon world-news summary):
-- Jensen Huang reinstated as Nvidia CEO; shares jump ~30%; markets rebound
-- Zaporizhzhia overnight strike: 2 killed, ~40 wounded incl. children
-- Israeli strikes in Gaza kill at least six, incl. two police officers
-- Iran vows to use "all tools" against the US naval blockade
-- COP31 collapses with no deal on fossil fuels
-- 5.6-magnitude quake in Nepal near the China border
-- South Korea offers up to $375,000 to catch AI cheating in exams
+A one-page newspaper front page for Tuesday 24 November 2026: a lead
+story on Jensen Huang's return as Nvidia CEO, six shorter stories
+(Zaporizhzhia, Gaza, Iran, COP31, the Nepal quake, South Korea's
+anti-AI-cheating bounty) and a markets strip (S&P 500 +4.7%, Nasdaq
++6.5%, Nikkei +3.9%, Gold $3,620, Brent $86.7).
+
+## How it works
+
+`main.py` (Python 3.13, stdlib only, no network) copies the
+pre-rendered `entry.png` (1024x1024, 134,542 bytes) sitting next to it
+to `/output/entry.png`, then verifies the copy is byte-identical to the
+source. Running it twice writes identical bytes.
+
+`build_image.py` is the generator that drew `entry.png` with Pillow
+(DejaVu / Liberation fonts, fixed layout, no randomness). Re-running it
+reproduces the same image bytes (sha256
+`b3870326b5df1ee5db490c77e427c5f15857223774f5a0eb26d1bf18b1996895`).
+
+## Run it
+
+```sh
+python3 main.py        # writes /output/entry.png
+```
+
+Headlines were cross-checked against Just Security Early Edition, The
+Global Eye, and the Horizon world-news summary for 24 Nov 2026.

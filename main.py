@@ -1,34 +1,29 @@
-"""make.fun entry: Sum up 24 November's world news in one image.
+#!/usr/bin/env python3
+"""make.fun entry: sum up 24 November's world news in one image.
 
-Deterministic, stdlib-only, no network: writes the pre-rendered
-1024x1024 PNG held in this repository to /output/entry.png.
-The image data is stored as base64 text in entry.png.b64 (the
-binary entry.png is uploaded alongside it when available and is
-used then); either way the written bytes are identical.
+Writes the pre-rendered entry.png (1024x1024, <1 MiB) that sits next
+to this file to /output/entry.png. Stdlib only, no network, no
+randomness: two runs write identical bytes.
 """
-import base64
-import os
+import hashlib
 import shutil
+from pathlib import Path
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-PNG = os.path.join(HERE, "entry.png")
-B64 = os.path.join(HERE, "entry.png.b64")
+HERE = Path(__file__).resolve().parent
+SRC = HERE / "entry.png"
+DST = Path("/output/entry.png")
 
-def main():
-    out = "/output/entry.png"
-    try:
-        os.makedirs("/output", exist_ok=True)
-    except OSError:
-        out = os.path.join(HERE, "output", "entry.png")
-        os.makedirs(os.path.dirname(out), exist_ok=True)
-    if os.path.exists(PNG):
-        shutil.copyfile(PNG, out)
-    else:
-        with open(B64, "r", encoding="ascii") as f:
-            data = base64.b64decode("".join(f.read().split()))
-        with open(out, "wb") as f:
-            f.write(data)
-    print(f"wrote {out} ({os.path.getsize(out)} bytes)")
+
+def main() -> None:
+    if not SRC.is_file():
+        raise SystemExit("entry.png not found next to main.py")
+    DST.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(SRC, DST)
+    digest = hashlib.sha256(DST.read_bytes()).hexdigest()
+    assert digest == hashlib.sha256(SRC.read_bytes()).hexdigest(), \
+        "output differs from source"
+    print(f"wrote {DST} ({DST.stat().st_size} bytes, sha256 {digest})")
+
 
 if __name__ == "__main__":
     main()
